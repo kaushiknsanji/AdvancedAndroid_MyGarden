@@ -26,6 +26,7 @@ import android.support.v4.content.Loader;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 
@@ -69,7 +70,6 @@ public class MainActivity
 
     @Override
     public void onLoadFinished(Loader<Cursor> loader, Cursor cursor) {
-        cursor.moveToFirst();
         mAdapter.swapCursor(cursor);
     }
 

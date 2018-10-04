@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <!-- COMPLETED (2): Create a plant_widget.xml file that contains an ImageView
+    defaulting to @drawable/grass -->
+    <ImageView
+        android:id="@+id/widget_plant_image"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:src="@drawable/grass"
+        />
+
+</LinearLayout>
