@@ -82,11 +82,8 @@ public class PlantListAdapter extends RecyclerView.Adapter<PlantListAdapter.Plan
     }
 
     public void swapCursor(Cursor newCursor) {
-        if (mCursor != null) {
-            mCursor.close();
-        }
-        mCursor = newCursor;
-        if (mCursor != null) {
+        if (newCursor != null) {
+            mCursor = newCursor;
             // Force the RecyclerView to refresh
             this.notifyDataSetChanged();
         }
