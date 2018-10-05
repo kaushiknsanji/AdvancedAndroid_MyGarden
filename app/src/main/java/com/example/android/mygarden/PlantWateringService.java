@@ -17,11 +17,13 @@ package com.example.android.mygarden;
 */
 
 import android.app.IntentService;
+import android.appwidget.AppWidgetManager;
+import android.content.ComponentName;
 import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
+import android.database.Cursor;
 import android.net.Uri;
-import android.provider.Settings;
 
 import com.example.android.mygarden.provider.PlantContract;
 import com.example.android.mygarden.utils.PlantUtils;
@@ -35,11 +37,11 @@ import static com.example.android.mygarden.provider.PlantContract.PATH_PLANTS;
  */
 public class PlantWateringService extends IntentService {
 
-    public static final String ACTION_WATER_PLANTS = "com.example.android.mygarden.action.water_plants";
-    // TODO (3): Create a new action ACTION_UPDATE_PLANT_WIDGETS to handle updating widget UI and
+    public static final String ACTION_WATER_PLANTS = BuildConfig.APPLICATION_ID + ".action.water_plants";
+    // COMPLETED (3): Create a new action ACTION_UPDATE_PLANT_WIDGETS to handle updating widget UI and
     // implement handleActionUpdatePlantWidgets to query the plant closest to dying and call
     // updatePlantWidgets to refresh widgets
-
+    public static final String ACTION_UPDATE_PLANT_WIDGETS = BuildConfig.APPLICATION_ID + ".action.update_plant_widgets";
 
     public PlantWateringService() {
         super("PlantWateringService");
@@ -58,6 +60,18 @@ public class PlantWateringService extends IntentService {
     }
 
     /**
+     * Starts the service to perform {@link #ACTION_UPDATE_PLANT_WIDGETS} with the given parameters.
+     * If the service is already performing a task this action will be queued.
+     *
+     * @param context Context to start the service
+     */
+    public static void startActionUpdatePlantWidgets(Context context){
+        Intent intent = new Intent(context, PlantWateringService.class);
+        intent.setAction(ACTION_UPDATE_PLANT_WIDGETS);
+        context.startService(intent);
+    }
+
+    /**
      * @param intent
      */
     @Override
@@ -66,8 +80,48 @@ public class PlantWateringService extends IntentService {
             final String action = intent.getAction();
             if (ACTION_WATER_PLANTS.equals(action)) {
                 handleActionWaterPlants();
+            } else if(ACTION_UPDATE_PLANT_WIDGETS.equals(action)){
+                handleActionUpdatePlantWidgets();
             }
         }
+    }
+
+    /**
+     * Handles {@link #ACTION_UPDATE_PLANT_WIDGETS} in the background thread with the provided
+     * parameters.
+     */
+    private void handleActionUpdatePlantWidgets() {
+        //Querying to get the plant that is in most need of water
+        Uri PLANTS_URI = BASE_CONTENT_URI.buildUpon().appendPath(PATH_PLANTS).build();
+        Cursor cursor = getContentResolver().query(
+                PLANTS_URI,
+                null,
+                null,
+                null,
+                PlantContract.PlantEntry.COLUMN_LAST_WATERED_TIME
+        );
+        //Extract the plant details
+        int imgRes = R.drawable.grass; //Default image in case the garden is empty
+        try{
+            if(cursor != null && cursor.moveToFirst()){
+                long timeNow = System.currentTimeMillis();
+                long wateredAt = cursor.getLong(cursor.getColumnIndex(PlantContract.PlantEntry.COLUMN_LAST_WATERED_TIME));
+                long createdAt = cursor.getLong(cursor.getColumnIndex(PlantContract.PlantEntry.COLUMN_CREATION_TIME));
+                int plantType = cursor.getInt(cursor.getColumnIndex(PlantContract.PlantEntry.COLUMN_PLANT_TYPE));
+                imgRes = PlantUtils.getPlantImageRes(this, timeNow - createdAt, timeNow - wateredAt, plantType);
+            }
+        } finally {
+            if(cursor != null && !cursor.isClosed()){
+                cursor.close();
+            }
+        }
+
+        //Obtaining the instance of AppWidgetManager
+        AppWidgetManager appWidgetManager = AppWidgetManager.getInstance(this);
+        //Getting the Widget IDs for our Widget Provider
+        int[] appWidgetIds = appWidgetManager.getAppWidgetIds(new ComponentName(this, PlantWidgetProvider.class));
+        //Updating all our widgets
+        PlantWidgetProvider.updatePlantWidgets(this,appWidgetManager, imgRes, appWidgetIds);
     }
 
     /**
@@ -83,7 +137,7 @@ public class PlantWateringService extends IntentService {
         getContentResolver().update(
                 PLANTS_URI,
                 contentValues,
-                PlantContract.PlantEntry.COLUMN_LAST_WATERED_TIME+">?",
+                PlantContract.PlantEntry.COLUMN_LAST_WATERED_TIME + " > ?",
                 new String[]{String.valueOf(timeNow - PlantUtils.MAX_AGE_WITHOUT_WATER)});
     }
 }
