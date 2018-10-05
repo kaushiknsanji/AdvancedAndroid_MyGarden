@@ -21,6 +21,7 @@ import android.appwidget.AppWidgetManager;
 import android.appwidget.AppWidgetProvider;
 import android.content.Context;
 import android.content.Intent;
+import android.support.v7.app.AppCompatDelegate;
 import android.widget.RemoteViews;
 
 import com.example.android.mygarden.ui.MainActivity;
@@ -29,7 +30,9 @@ public class PlantWidgetProvider extends AppWidgetProvider {
 
     static void updateAppWidget(Context context, AppWidgetManager appWidgetManager,
                                 int appWidgetId) {
-
+        //Enables to use Vector Drawables in Drawable Container attributes
+        //To be called before inflation of Views
+        AppCompatDelegate.setCompatVectorFromResourcesEnabled(true);
         // Create an Intent to launch MainActivity when clicked
         Intent intent = new Intent(context, MainActivity.class);
         PendingIntent pendingIntent = PendingIntent.getActivity(context, 0, intent, 0);
@@ -37,7 +40,11 @@ public class PlantWidgetProvider extends AppWidgetProvider {
         RemoteViews views = new RemoteViews(context.getPackageName(), R.layout.plant_widget);
         // Widgets allow click handlers to only launch pending intents
         views.setOnClickPendingIntent(R.id.widget_plant_image, pendingIntent);
-        // TODO (4): Create a PendingIntent for the PlantWateringService and setOnClickPendingIntent for widget_water_button
+        // COMPLETED (4): Create a PendingIntent for the PlantWateringService and setOnClickPendingIntent for widget_water_button
+        Intent wateringIntent = new Intent(context, PlantWateringService.class);
+        wateringIntent.setAction(PlantWateringService.ACTION_WATER_PLANTS);
+        PendingIntent wateringServicePendingIntent = PendingIntent.getService(context, 0, wateringIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+        views.setOnClickPendingIntent(R.id.widget_water_button, wateringServicePendingIntent);
         // Instruct the widget manager to update the widget
         appWidgetManager.updateAppWidget(appWidgetId, views);
     }
