@@ -30,52 +30,52 @@
         android:id="@+id/plant_age"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        app:layout_constraintRight_toLeftOf="@+id/plant_detail_image"
-        app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintBottom_toTopOf="@id/water_button"
-        app:layout_constraintLeft_toLeftOf="parent">
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toLeftOf="@+id/plant_detail_image"
+        app:layout_constraintTop_toTopOf="parent">
         <include layout="@layout/plant_age" />
     </RelativeLayout>
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textSize="12sp"
         android:layout_margin="4dp"
-        app:layout_constraintTop_toBottomOf="@id/plant_age"
+        android:text="@string/since_planted"
+        android:textSize="12sp"
         app:layout_constraintLeft_toLeftOf="@id/plant_age"
         app:layout_constraintRight_toRightOf="@id/plant_age"
-        android:text="@string/since_planted"/>
+        app:layout_constraintTop_toBottomOf="@id/plant_age" />
 
 
     <RelativeLayout
         android:id="@+id/water_meter"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintBottom_toTopOf="@id/water_button"
         app:layout_constraintLeft_toRightOf="@+id/plant_detail_image"
-        app:layout_constraintRight_toRightOf="parent">
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
         <include layout="@layout/water_meter" />
     </RelativeLayout>
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textSize="12sp"
         android:layout_margin="4dp"
-        app:layout_constraintTop_toBottomOf="@id/water_meter"
+        android:text="@string/since_watered"
+        android:textSize="12sp"
         app:layout_constraintLeft_toLeftOf="@id/water_meter"
         app:layout_constraintRight_toRightOf="@id/water_meter"
-        android:text="@string/since_watered"/>
+        app:layout_constraintTop_toBottomOf="@id/water_meter" />
 
 
 
     <ImageView
-        android:layout_marginTop="16dp"
         android:id="@+id/plant_detail_image"
         android:layout_width="wrap_content"
         android:layout_height="0dp"
+        android:layout_marginTop="16dp"
         app:layout_constraintBottom_toTopOf="@id/plant_detail_name"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
@@ -87,12 +87,12 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textAlignment="center"
-        app:layout_constraintTop_toBottomOf="@id/plant_detail_image"
+        android:textSize="32sp"
+        android:textStyle="bold"
         app:layout_constraintBottom_toTopOf="@id/water_button"
         app:layout_constraintLeft_toLeftOf="@id/plant_detail_image"
         app:layout_constraintRight_toRightOf="@id/plant_detail_image"
-        android:textStyle="bold"
-        android:textSize="32sp"
+        app:layout_constraintTop_toBottomOf="@id/plant_detail_image"
         tools:text="123" />
 
     <android.support.design.widget.FloatingActionButton
@@ -101,10 +101,10 @@
         android:layout_height="wrap_content"
         android:layout_margin="@dimen/fab_margin"
         android:onClick="onBackButtonClick"
-        android:src="@drawable/arrow_back_white"
         app:fabSize="auto"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintLeft_toLeftOf="parent" />
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:srcCompat="@drawable/arrow_back_white" />
 
     <android.support.design.widget.FloatingActionButton
         android:id="@+id/water_button"
@@ -112,11 +112,11 @@
         android:layout_height="wrap_content"
         android:layout_margin="@dimen/fab_margin"
         android:onClick="onWaterButtonClick"
-        android:src="@drawable/water_drop_white"
         app:fabSize="auto"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintLeft_toRightOf="@+id/back_button"
-        app:layout_constraintRight_toLeftOf="@+id/reset_button" />
+        app:layout_constraintRight_toLeftOf="@+id/reset_button"
+        app:srcCompat="@drawable/water_drop_white" />
 
     <android.support.design.widget.FloatingActionButton
         android:id="@+id/reset_button"
@@ -124,9 +124,9 @@
         android:layout_height="wrap_content"
         android:layout_margin="@dimen/fab_margin"
         android:onClick="onCutButtonClick"
-        android:src="@drawable/cut_white"
         app:fabSize="auto"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintRight_toRightOf="parent" />
+        app:layout_constraintRight_toRightOf="parent"
+        app:srcCompat="@drawable/cut_white" />
 
 </android.support.constraint.ConstraintLayout>

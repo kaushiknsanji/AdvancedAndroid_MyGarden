@@ -75,7 +75,7 @@ public class MainActivity
 
     @Override
     public void onLoaderReset(Loader loader) {
-
+        mAdapter.closeCursor();
     }
 
     public void onPlantClick(View view) {
